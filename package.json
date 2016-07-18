@@ -1,0 +1,53 @@
+{
+  "name": "olim",
+  "version": "0.0.1",
+  "description": "Carefully designed to-do app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pierremtb/olim-web-firebase"
+  },
+  "license": "AGPL-3.0+",
+  "scripts": {
+    "watch": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --https --hot --inline --progress --colors --content-base public/",
+    "build": "./node_modules/webpack/bin/webpack.js --progress --colors -p",
+    "deploy": "./node_modules/webpack/bin/webpack.js --progress --colors -p && firebase deploy"
+  },
+  "bugs": {
+    "url": "https://github.com/pierremtb/olim-web-firebase/issues"
+  },
+  "homepage": "https://github.com/pierremtb/olim-web-firebase#readme",
+  "author": "Pierre Jacquier",
+  "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
+    "babel-core": "^6.9.1",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "chart.js": "^2.1.4",
+    "css-loader": "^0.23.1",
+    "file-loader": "^0.8.5",
+    "firebase": "^3.0.3",
+    "html-webpack-plugin": "^2.19.0",
+    "moment": "^2.13.0",
+    "node-sass": "^3.7.0",
+    "react": "^15.1.0",
+    "react-addons-css-transition-group": "^15.1.0",
+    "react-addons-transition-group": "^15.1.0",
+    "react-chartist": "^0.10.2",
+    "react-chartjs": "git://github.com/malloc-fi/react-chartjs.git",
+    "react-dom": "^15.1.0",
+    "react-ga": "^2.1.0",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.4.1",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0",
+    "sass-loader": "^3.2.0",
+    "source-map-loader": "^0.1.5",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {}
+}
