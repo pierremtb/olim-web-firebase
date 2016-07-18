@@ -1,15 +1,42 @@
-import { compose } from 'react-komposer';
-import { TagsList } from '../components/TagsList.jsx';
-import { Loading } from '../components/Loading.jsx';
+import { connect } from 'react-redux';
+import TagsList from '../components/TagsList.jsx';
+import C from '../constants';
+// import { getTagMap } from '../utils';
 
-function composer(params, onReady) {
-  // const tasksSubscription = Meteor.subscribe('user-tasks');
-  // const tagsSubscription = Meteor.subscribe('user-tags');
-  // if (tasksSubscription.ready() && tagsSubscription.ready()) {
-  //   const tasks = Tasks.find().fetch();
-  //   const tags = Tags.find().fetch();
-  //   onReady(null, { tasks, tags });
-  // }
+function mapStateToProps(state) {
+    const unitSystem = state.settings.unitSystem;
+    return {
+        tags: state.tags,
+        dataLoading: state.dataLoading,
+        unitSystem,
+        tempUnit: unitSystem === C.IMPERIAL ? '°F' : '°C',
+        weightUnit: unitSystem === C.IMPERIAL ? 'lbs' : 'kg',
+    };
 }
 
-export default compose(composer, Loading)(TagsList);
+function mapDispatchToProps(dispatch) {
+    return {
+        insertTag: tag => {
+            const uid = C.FIREBASE.auth().currentUser.uid;
+            const tagRef = C.FIREBASE.app().database().ref(`users/${uid}/tags`);
+            tagRef.push().set(tag);
+        },
+        updateTag: tag => {
+            const uid = C.FIREBASE.auth().currentUser.uid;
+            const tagRef = C.FIREBASE.app().database().ref(`users/${uid}/tags/${tag.key}`);
+            tagRef.set((tag));
+        },
+        removeTag: key => {
+            const uid = C.FIREBASE.auth().currentUser.uid;
+            const tagRef = C.FIREBASE.app().database().ref(`users/${uid}/tags/${key}`);
+            tagRef.remove();
+        },
+    };
+}
+
+const TagsListContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(TagsList);
+
+export default TagsListContainer;

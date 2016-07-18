@@ -29,6 +29,7 @@ export class Task extends React.Component {
     this.markTaskNotDone = this.markTaskNotDone.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
     this.setNewDay = this.setNewDay.bind(this);
+    this.setTag = this.setTag.bind(this);
     this.setNewTime = this.setNewTime.bind(this);
     this.setNewReminder = this.setNewReminder.bind(this);
     this.getReminderTime = this.getReminderTime.bind(this);
@@ -77,6 +78,13 @@ export class Task extends React.Component {
     } else {
       onDateChange(setTime(dueDate, time));
     }
+  }
+
+  setTag(tag) {
+    const task = {};
+    Object.assign(task, this.props);
+    task.tag = tag;
+    this.props.onTaskUpdate(task);
   }
 
   setNewReminder(time) {
@@ -138,7 +146,7 @@ export class Task extends React.Component {
     }
     if (this.props.tag) {
       if (this.props.tag.color) {
-        return '#' + this.props.tag.color.substring(3, 9);
+        return this.props.tag.color;
       }
     }
     return avatarBackgroundColor;
@@ -150,7 +158,7 @@ export class Task extends React.Component {
     }
     if (this.props.tag) {
       if (this.props.tag.color) {
-        return '#' + this.props.tag.color.substring(3, 9);
+        return this.props.tag.color;
       }
     }
     return avatarBackgroundColor;
@@ -473,7 +481,7 @@ export class Task extends React.Component {
                     primaryText={`#${tag.name}`}
                     onTouchTap={() => {
                       this.handleTagsPopoverClose();
-                      this.props.onTagChange(tag._id);
+                      this.setTag(tag);
                     }}
                     leftIcon={
                       <FontIcon

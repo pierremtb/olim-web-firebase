@@ -1,15 +1,35 @@
-import { compose } from 'react-komposer';
-import { AppNavigation } from '../components/AppNavigation.jsx';
-import { EmptyLoading } from '../components/EmptyLoading.jsx';
-import auth from '../auth.js';
+import { connect } from 'react-redux';
+import AppNavigation from '../components/AppNavigation.jsx';
+import C from '../constants';
+import { logout } from '../actions';
 
-function composer(params, onReady) {
-  // const tagsSubscription = Meteor.subscribe('user-tags');
-  // if (tagsSubscription.ready()) {
-  //   const tags = Tags.find().fetch();
-  //   onReady(null, { tags, isUser: Meteor.user() });
-  // }
-  onReady(null, { tags: [], isUser: auth.isLoggedIn() });
+function mapStateToProps(state) {
+  const unitSystem = state.settings.unitSystem;
+  return {
+    tasks: state.tasks,
+    tags: state.tags,
+    userName: state.auth.userName,
+    unitSystem,
+    tempUnit: unitSystem === C.IMPERIAL ? '°F' : '°C',
+    weightUnit: unitSystem === C.IMPERIAL ? 'lbs' : 'kg',
+  };
 }
 
-export default compose(composer, EmptyLoading)(AppNavigation);
+function mapDispatchToProps(dispatch) {
+  return {
+    logout: e => {
+      e.preventDefault();
+      C.FIREBASE.auth().signOut().then(() => {
+        dispatch(logout());
+        location.reload();
+      });
+    }
+  };
+}
+
+const AppNavigationContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AppNavigation);
+
+export default AppNavigationContainer;

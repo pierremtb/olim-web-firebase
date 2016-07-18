@@ -7,7 +7,6 @@ const tasksReducer = (currentState = initialState, action) => {
   switch(action.type) {
 
     case C.FETCHED_TASKS:
-      console.log(action.tasks);
       return action.tasks;
 
     case C.COMPARE_TASKS:

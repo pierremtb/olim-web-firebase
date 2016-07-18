@@ -1,9 +1,6 @@
 import { connect } from 'react-redux';
 import TasksList from '../components/TasksList.jsx';
-// import { removeTask } from '../actions';
 import C from '../constants';
-// import { showDialog } from '../actions';
-// import moment from 'moment';
 import { getTaskMap } from '../utils';
 
 function mapStateToProps(state) {
@@ -11,6 +8,7 @@ function mapStateToProps(state) {
   return {
     tasks: state.tasks,
     tags: state.tags,
+    dataLoading: state.dataLoading,
     unitSystem,
     tempUnit: unitSystem === C.IMPERIAL ? '°F' : '°C',
     weightUnit: unitSystem === C.IMPERIAL ? 'lbs' : 'kg',

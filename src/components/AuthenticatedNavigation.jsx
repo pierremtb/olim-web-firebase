@@ -1,5 +1,5 @@
 import React from 'react';
-import { browserHistory } from 'react-router';
+import history from '../history';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import SubHeader from 'material-ui/Subheader';
@@ -11,7 +11,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { avatarBackgroundColor } from '../themes.js';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Avatar from 'material-ui/Avatar';
-import { Chip } from './Chip.jsx';
+import Chip from 'material-ui/Chip';
 
 export class AuthenticatedNavigation extends React.Component {
   constructor(props) {
@@ -27,6 +27,7 @@ export class AuthenticatedNavigation extends React.Component {
     this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.openTagsPage = this.openTagsPage.bind(this);
     this.openTasksPage = this.openTasksPage.bind(this);
     this.openSettingsPage = this.openSettingsPage.bind(this);
@@ -89,24 +90,23 @@ export class AuthenticatedNavigation extends React.Component {
     });
   }
 
-  handleLogout() {
-    // Meteor.logout(() => browserHistory.push('/action/login'));
-    this.handleDrawerClose();
+  handleLogout(e) {
+    this.props.onLogout(e);
   }
 
   openTagsPage() {
     this.handleDrawerClose();
-    browserHistory.push('/tags');
+    history.push('/tags');
   }
 
   openTasksPage() {
     this.handleDrawerClose();
-    browserHistory.push('/tasks');
+    history.push('/tasks');
   }
 
   openSettingsPage() {
     this.handleDrawerClose();
-    browserHistory.push('/settings');
+    history.push('/settings');
   }
 
   render() {
@@ -138,13 +138,20 @@ export class AuthenticatedNavigation extends React.Component {
             {this.getCurrentTag() ?
               <div style={{ marginTop: 15 }}>
                 <Chip
-                  deletable
-                  leftIcon={this.getCurrentTag().icon}
-                  leftChar={this.getCurrentTag().name.charAt(0)}
-                  leftColor={this.getCurrentTag().color ? this.getCurrentTag().color : avatarBackgroundColor}
-                  text={`#${this.getCurrentTag().name}`}
-                  onDeleteButtonClick={() => browserHistory.push('/tasks')}
-                />
+                    onRequestDelete={() => history.push('/tasks')}
+                >
+                  <Avatar
+                      backgroundColor={this.getCurrentTag().color}
+                      color="white"
+                      icon={this.getCurrentTag().icon ?
+                        <FontIcon className="material-icons">{this.getCurrentTag().icon}</FontIcon>
+                        : null
+                      }
+                  >
+                    {!this.getCurrentTag().icon ? this.getCurrentTag().name.charAt(0) : null}
+                  </Avatar>
+                  {this.getCurrentTag().name}
+                </Chip>
               </div>
             : null}
           </ToolbarGroup>
@@ -177,7 +184,7 @@ export class AuthenticatedNavigation extends React.Component {
         >
           <Menu>
             <MenuItem
-              primaryText={'Yay'}
+              primaryText={this.props.userName}
               onTouchTap={this.handleAccountMenuClose}
               disabled
             />
@@ -200,7 +207,7 @@ export class AuthenticatedNavigation extends React.Component {
                   primaryText={`#${tag.name}`}
                   onTouchTap={() => {
                     this.handleTagsPopoverClose();
-                    browserHistory.push(`/tasks/tag/${tag.name.toLowerCase()}`);
+                    history.push(`/tasks/tag/${tag.name.toLowerCase()}`);
                   }}
                   leftIcon={
                     <FontIcon
@@ -234,21 +241,21 @@ export class AuthenticatedNavigation extends React.Component {
             </span>
           </div>
           <Divider />
-          <SubHeader>Navigation</SubHeader>
+          <SubHeader>Tasks</SubHeader>
           <MenuItem
             onTouchTap={this.openTasksPage}
             leftIcon={<FontIcon className="material-icons">list</FontIcon>}
           >
-            Tasks
+            All
           </MenuItem>
+          <Divider />
+          <SubHeader>Manage</SubHeader>
           <MenuItem
-            onTouchTap={this.openTagsPage}
-            leftIcon={<FontIcon className="material-icons">label</FontIcon>}
+              onTouchTap={this.openTagsPage}
+              leftIcon={<FontIcon className="material-icons">label_outline</FontIcon>}
           >
             Tags
           </MenuItem>
-          <Divider />
-          <SubHeader>Account</SubHeader>
           <MenuItem
             onTouchTap={this.openSettingsPage}
             leftIcon={<FontIcon className="material-icons">settings</FontIcon>}
@@ -265,11 +272,13 @@ export class AuthenticatedNavigation extends React.Component {
       </div>
     );
   }
-};
+}
 
 AuthenticatedNavigation.propTypes = {
   tags: React.PropTypes.array,
   route: React.PropTypes.object,
   routes: React.PropTypes.object,
   routeParams: React.PropTypes.object,
+  userName: React.PropTypes.string,
+  onLogout: React.PropTypes.func,
 };

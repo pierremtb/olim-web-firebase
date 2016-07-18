@@ -96,8 +96,9 @@ export const Matcher = {
       {
         name: 'tag',
         type: 'tag',
-        regex: / (#[a-zA-Z0-9_-]{1,20}$)| (#[a-zA-Z0-9_-]{1,20})|(#[a-zA-Z0-9_-]{1,20}) /i,
+        regex: /(#[a-zA-Z0-9_-]{1,20})/i,
         getResult(matches) {
+          console.log(matches);
           const hash = matches[1] || matches[2];
           return hash.replace('#', '');
         },
@@ -170,6 +171,9 @@ export function getTaskMap(task) {
     if (task.tag.key) {
       map.tagKey = task.tag.key;
     }
+  }
+  if (task.tagKey) {
+    map.tagKey = task.tagKey;
   }
   return map;
 }

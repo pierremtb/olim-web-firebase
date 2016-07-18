@@ -7,7 +7,6 @@ const tagsReducer = (currentState = initialState, action) => {
   switch (action.type) {
 
     case C.FETCHED_TAGS:
-      console.log(action.tags);
       return action.tags;
 
     default:

@@ -17,8 +17,7 @@ export class Tag extends React.Component {
   }
 
   deleteTag() {
-    const { tagId } = this.props;
-    removeTag.call({ _id: tagId });
+    this.props.onDeleteClick(this.props.tagKey);
   }
 
   render() {
@@ -51,7 +50,7 @@ export class Tag extends React.Component {
             iconClassName="material-icons"
             tooltip="Delete"
             iconStyle={{ color: grey600 }}
-            onTouchTap={this.props.onDeleteClick}
+            onTouchTap={this.deleteTag}
             style={{
               position: 'absolute',
               right: 0,
@@ -82,7 +81,7 @@ Tag.propTypes = {
   comments: React.PropTypes.string,
   icon: React.PropTypes.string,
   color: React.PropTypes.string,
-  tagId: React.PropTypes.string,
+  tagKey: React.PropTypes.string,
   onEditClick: React.PropTypes.func,
   onDeleteClick: React.PropTypes.func,
 };

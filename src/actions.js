@@ -57,7 +57,6 @@ export const startListeningToTasks = () => {
     return (dispatch, getState) => {
       const tasksRef = C.FIREBASE.app().database().ref('users').child(uid).child('tasks');
       tasksRef.on('value', snapshot => {
-        console.log(snapshot.val());
         dispatch(fetchedTasks(snapshot.val()));
       }, err => {
         console.log(err);
@@ -113,7 +112,6 @@ export const startListeningToRoasts = () => {
     return (dispatch, getState) => {
       let roastsRef = C.FIREBASE.app().database().ref('roasts').equalTo('uid', uid);
       roastsRef.on('value', snapshot => {
-        console.log(snapshot.val());
         dispatch(fetchedRoasts(snapshot.val()));
       }, err => {
         console.log(err);

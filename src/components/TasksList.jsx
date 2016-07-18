@@ -2,6 +2,7 @@ import React from 'react';
 import { TasksGroup } from './TasksGroup.jsx';
 import moment from 'moment';
 import { TaskAdder } from './TaskAdder.jsx';
+import Loading from './Loading.jsx';
 
 export default function TasksList(props) {
   let tasks = props.tasks;
@@ -31,7 +32,7 @@ export default function TasksList(props) {
     moment(task.dueDate, 'x').startOf('day').isAfter(moment().add(8, 'days').startOf('day'))
   );
 
-  return (
+  return props.dataLoading ? <Loading /> : (
     <div>
       <TasksGroup
         tasks={overdueTasks}
@@ -82,4 +83,5 @@ TasksList.propTypes = {
   insertTask: React.PropTypes.func,
   updateTask: React.PropTypes.func,
   removeTask: React.PropTypes.func,
+  dataLoading: React.PropTypes.bool,
 };

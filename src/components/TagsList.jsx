@@ -11,13 +11,13 @@ import RegexTextField from './RegexTextField.jsx';
 import * as Colors from 'material-ui/styles/colors';
 // import { insertTag, updateTag, removeTag } from '../../api/tags/methods';
 
-export class TagsList extends React.Component {
+export default class TagsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tagDialogOpened: false,
       tagNameValue: '',
-      currentId: false,
+      currentKey: false,
       tagIconValue: 'label_outline',
       tagColorValue: Colors.pink400,
       tagCommentsValue: '',
@@ -29,22 +29,18 @@ export class TagsList extends React.Component {
     this.handleTagColorChange = this.handleTagColorChange.bind(this);
     this.handleTagCommentsChange = this.handleTagCommentsChange.bind(this);
     this.insertNewTag = this.insertNewTag.bind(this);
+    this.updateCurrentTag = this.updateCurrentTag.bind(this);
   }
 
   insertNewTag() {
     const tag = {
-      owner: '',
       name: this.state.tagNameValue,
       icon: this.state.tagIconValue,
       color: this.state.tagColorValue,
       comments: this.state.tagCommentsValue,
-      createdAt: (new Date()).getTime(),
     };
-    // insertTag.call(tag, err => {
-    //   if (!err) {
-    //     this.handleTagDialogClose();
-    //   }
-    // });
+    this.props.insertTag(tag);
+    this.handleTagDialogClose();
   }
 
   updateCurrentTag() {
@@ -53,13 +49,10 @@ export class TagsList extends React.Component {
       icon: this.state.tagIconValue,
       color: this.state.tagColorValue,
       comments: this.state.tagCommentsValue,
+      key: this.state.currentKey,
     };
-    // updateTag.call({ _id: this.state.currentId, update: tag }, err => {
-    //   console.log(err);
-    //   if (!err) {
-    //     this.handleTagDialogClose();
-    //   }
-    // });
+    this.props.updateTag(tag);
+    this.handleTagDialogClose();
   }
 
   handleTagDialogOpen() {
@@ -69,7 +62,7 @@ export class TagsList extends React.Component {
   handleTagDialogClose() {
     this.setState({
       tagDialogOpened: false,
-      currentId: false,
+      currentKey: false,
       tagNameValue: '',
       tagIconValue: 'label_outline',
       tagColorValue: Colors.pink400,
@@ -107,12 +100,12 @@ export class TagsList extends React.Component {
                   comments={tag.comments}
                   icon={tag.icon ? tag.icon : null}
                   color={tag.color ? tag.color : null}
-                  taskId={tag._id}
-                  onDeleteClick={() => null}
+                  tagKey={tag.key}
+                  onDeleteClick={this.props.removeTag}
                   onEditClick={() => {
                     this.setState({
                       tagDialogOpened: true,
-                      currentId: tag._id,
+                      currentKey: tag.key,
                       tagNameValue: tag.name,
                       tagIconValue: tag.icon,
                       tagColorValue: tag.color,
@@ -150,7 +143,7 @@ export class TagsList extends React.Component {
               label="Save"
               primary
               onTouchTap={() => {
-                if (!this.state.currentId) {
+                if (!this.state.currentKey) {
                   this.insertNewTag();
                 } else {
                   this.updateCurrentTag();
@@ -235,4 +228,7 @@ export class TagsList extends React.Component {
 TagsList.propTypes = {
   tasks: React.PropTypes.array,
   tags: React.PropTypes.array,
+  insertTag: React.PropTypes.func,
+  updateTag: React.PropTypes.func,
+  removeTag: React.PropTypes.func,
 };

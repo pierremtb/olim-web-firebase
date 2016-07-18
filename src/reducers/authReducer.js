@@ -30,6 +30,7 @@ const authReducer = (currentState = initialState, action) => {
       break;
 
     case C.LOGIN_SUCCESS:
+        console.log(action);
       return {
         ...currentState,
         authStatus: C.LOGGED_IN,
@@ -47,7 +48,6 @@ const authReducer = (currentState = initialState, action) => {
         uid: null,
         userName: null,
         photoURL: null,
-        userName: null,
         email: null
       };
       break;

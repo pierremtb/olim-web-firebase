@@ -91,6 +91,7 @@ store.dispatch(listeningToAuth());
 // Start listening to firebase auth changes.
 C.FIREBASE.auth().onAuthStateChanged((user) => {
   if (user) {
+    store.dispatch(loginSuccess(user));
     store.dispatch(loadingData());
 
     const tasksRef = C.FIREBASE.app().database().ref(`/users/${user.uid}/tasks`);
@@ -118,7 +119,6 @@ C.FIREBASE.auth().onAuthStateChanged((user) => {
     });
   }
 
-  store.dispatch(loginSuccess(user));
 }, err => {
   console.log(err);
 });

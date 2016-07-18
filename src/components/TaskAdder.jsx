@@ -48,6 +48,7 @@ export class TaskAdder extends React.Component {
       task.tagKey = this.state.tagValue;
     }
     this.props.onTaskInsert(task);
+    this.clearNewTask();
   }
 
   handleKeyDown(e) {
@@ -76,9 +77,10 @@ export class TaskAdder extends React.Component {
               dueDateValue = setDay(dueDateValue, result);
               break;
             case 'tag':
-              tag = this.props.tags.filter(t => t.name === result)[0];
+              tag = this.props.tags.filter(t => t.name.toUpperCase() === result.toUpperCase())[0];
               if (tag) {
-                tagValue = tag._id;
+                console.log(tag);
+                tagValue = tag.key;
               }
               break;
             default: break;
@@ -124,7 +126,7 @@ export class TaskAdder extends React.Component {
                 reminder={this.state.reminderValue}
                 disabled={false}
                 availableTags={this.props.tags}
-                tag={this.props.tags.filter(tag => tag._id === this.state.tagValue)[0]}
+                tag={this.props.tags.filter(tag => tag.key === this.state.tagValue)[0]}
                 onTagChange={tagId => this.setState({ tagValue: tagId })}
                 onDateChange={dueDate => this.setState({ dueDateValue: dueDate })}
                 onReminderChange={reminder => this.setState({ reminderValue: reminder })}

@@ -23,24 +23,25 @@ export class TasksGroup extends React.Component {
   }
 
   markAllAsDone() {
-    this.props.tasks.map(task => {
-      // markTaskAsDone.call({ _id: task._id });
-      return task;
+    this.props.tasks.map(t => {
+      const task = {};
+      Object.assign(task, t);
+      task.dueDate = new Date(task.dueDate);
+      task.done = true;
+      task.taskKey = task.key;
+      this.props.onTaskUpdate(task);
+      return t;
     });
   }
 
   postponeAllTo(newDate, setDate) {
-    this.props.tasks.map(task => {
-      const dueDate = setDate(task.dueDate, newDate(task.dueDate)).getTime();
-      // updateTask.call(
-      //   { _id: task._id, update: { dueDate } },
-      //   (err) => {
-      //     if (err) {
-      //       console.log(err);
-      //     }
-      //   }
-      // );
-      return task;
+    this.props.tasks.map(t => {
+      const task = {};
+      Object.assign(task, t);
+      task.dueDate = setDate(task.dueDate, newDate(task.dueDate));
+      task.taskKey = task.key;
+      this.props.onTaskUpdate(task);
+      return t;
     });
   }
 
