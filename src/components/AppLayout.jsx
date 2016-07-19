@@ -1,7 +1,11 @@
 import React from 'react';
 import AppNavigation from '../containers/AppNavigationContainer.js';
+import { cyan500 } from 'material-ui/styles/colors';
 
 export function AppLayout({ children }) {
+
+  document.body.style.backgroundColor = cyan500;
+
   return (
     <div>
       <AppNavigation

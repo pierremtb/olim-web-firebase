@@ -35,6 +35,21 @@ const auth = {
       });
     }
   },
+
+  authUiConfig: {
+    signInSuccessUrl: "/",
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID
+    ],
+    tosUrl: "tos-url-goes-here",
+    siteName: "Olim",
+    callbacks: {
+      signInSuccess: function (currentUser, credential, redirectUrl) {
+        return false; // Do not redirect automatically
+      }
+    }
+  },
 };
 
 export default auth;
