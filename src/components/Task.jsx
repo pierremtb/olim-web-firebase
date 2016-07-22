@@ -1,6 +1,5 @@
 import React from 'react';
 import { ListItem } from 'material-ui/List';
-// import { markTaskAsDone, markTaskAsNotDone, removeTask, updateTask } from '../../api/tasks/methods';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import Divider from 'material-ui/Divider';
@@ -275,53 +274,6 @@ export class Task extends React.Component {
                       onTouchTap={() => this.refs.newTimePicker.show()}
                     />
                   </IconMenu>
-                  <IconMenu
-                    iconButtonElement={
-                      <IconButton
-                        iconClassName="material-icons"
-                        tooltip={!this.props.reminder ? 'Edit the reminder' : 'Add a reminder'}
-                        iconStyle={{
-                          color: grey600,
-                          opacity: this.state.hovered ? 1 : 0,
-                        }}
-                      >
-                        {this.props.reminder ?
-                          'alarm_on'
-                        : 'alarm_add'}
-                      </IconButton>
-                    }
-                    anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-                    targetOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-                    style={{
-                      right: 48,
-                      position: 'absolute',
-                    }}
-                  >
-                    <MenuItem
-                      primaryText="Remind me 10' before"
-                      onTouchTap={() => this.setNewReminder(moment().startOf('day').minutes(10))}
-                    />
-                    <MenuItem
-                      primaryText="Remind me 1h before"
-                      onTouchTap={() => this.setNewReminder(moment().startOf('day').hours(1))}
-                    />
-                    <Divider />
-                    <MenuItem
-                      primaryText={
-                        this.props.reminder ?
-                          `Edit the reminder (${this.props.reminder.time}')`
-                        :
-                          'Set a new reminder'
-                      }
-                      onTouchTap={() => this.refs.newReminderPicker.show()}
-                    />
-                    {this.props.reminder ?
-                      <MenuItem
-                        primaryText="Delete the reminder"
-                        onTouchTap={() => this.setNewReminder()}
-                      />
-                    : null}
-                  </IconMenu>
                   <IconButton
                     iconClassName="material-icons"
                     tooltip="Delete"
@@ -330,7 +282,7 @@ export class Task extends React.Component {
                       opacity: this.state.hovered ? 1 : 0,
                     }}
                     style={{
-                      right: 96,
+                      right: /* 96 */48,
                       position: 'absolute',
                     }}
                     onTouchTap={this.deleteTask}
@@ -371,6 +323,7 @@ export class Task extends React.Component {
                       iconClassName="material-icons"
                       tooltip={this.props.reminder ? 'Edit the reminder' : 'Set a reminder'}
                       iconStyle={{ color: grey600 }}
+                      disabled
                     >
                       {this.props.reminder ? 'alarm_on' : 'alarm_add'}
                     </IconButton>
@@ -500,17 +453,57 @@ export class Task extends React.Component {
   }
 }
 
+// TODO: reimplement reminders
 /*
- <Avatar
- backgroundColor={tag.color ? tag.color : avatarBackgroundColor}
- color="white"
- onTouchTap={() => this.props.onTagChange(tag._id)}
- icon={tag.icon ?
- <FontIcon className="material-icons">{tag.icon}</FontIcon>
- : null}
+ <IconMenu
+ style={{ display: 'none' }}
+ iconButtonElement={
+ <IconButton
+ disabled
+ iconClassName="material-icons"
+ tooltip={!this.props.reminder ? 'Edit the reminder' : 'Add a reminder'}
+ iconStyle={{
+ color: grey600,
+ opacity: this.state.hovered ? 1 : 0,
+ }}
  >
- {!tag.icon ? tag.name.charAt(0).toUpperCase() : null}
- </Avatar>
+ {this.props.reminder ?
+ 'alarm_on'
+ : 'alarm_add'}
+ </IconButton>
+ }
+ anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+ targetOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+ style={{
+ right: 48,
+ position: 'absolute',
+ }}
+ >
+ <MenuItem
+ primaryText="Remind me 10' before"
+ onTouchTap={() => this.setNewReminder(moment().startOf('day').minutes(10))}
+ />
+ <MenuItem
+ primaryText="Remind me 1h before"
+ onTouchTap={() => this.setNewReminder(moment().startOf('day').hours(1))}
+ />
+ <Divider />
+ <MenuItem
+ primaryText={
+ this.props.reminder ?
+ `Edit the reminder (${this.props.reminder.time}')`
+ :
+ 'Set a new reminder'
+ }
+ onTouchTap={() => this.refs.newReminderPicker.show()}
+ />
+ {this.props.reminder ?
+ <MenuItem
+ primaryText="Delete the reminder"
+ onTouchTap={() => this.setNewReminder()}
+ />
+ : null}
+ </IconMenu>
  */
 
 Task.propTypes = {

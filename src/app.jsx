@@ -7,6 +7,7 @@ import { AppLayout } from './components/AppLayout.jsx';
 import { PublicLayout } from './components/PublicLayout.jsx';
 import { PageTasks } from './components/PageTasks.jsx';
 import { PageTags } from './components/PageTags.jsx';
+import { PageSearch } from './components/PageSearch.jsx';
 import { PageSettings } from './components/PageSettings.jsx';
 import { PageLogin } from './components/PageLogin.jsx';
 import { NotFound } from './components/PageNotFound.jsx';
@@ -16,7 +17,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ReactGA from 'react-ga';
 import thunkMiddleware from 'redux-thunk';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import C from './constants';
 import rootReducer from './reducers/index';
 import {
@@ -69,7 +70,10 @@ const routes = (
     <Route path="/" component={AppLayout}>
       <IndexRoute name="Tasks" component={PageTasks} onEnter={auth.checkAuth} />
       <Route name="Tasks" path="/tasks" component={PageTasks} onEnter={auth.checkAuth} />
+      <Route name="Tasks" path="/tasks/:group" component={PageTasks} onEnter={auth.checkAuth} />
       <Route name="Tasks" path="/tasks/tag/:tagName" component={PageTasks} onEnter={auth.checkAuth} />
+      <Route name="Search" path="/search" component={PageSearch} onEnter={auth.checkAuth} />
+      <Route name="Search" path="/search/:query" component={PageSearch} onEnter={auth.checkAuth} />
       <Route name="Tags" path="/tags" component={PageTags} onEnter={auth.checkAuth} />
       <Route name="Settings" path="/settings" component={PageSettings} onEnter={auth.checkAuth} />
       <Route path="*" component={NotFound} />
@@ -91,7 +95,7 @@ store.dispatch(listeningToAuth());
 // Start listening to firebase auth changes.
 C.FIREBASE.auth().onAuthStateChanged((user) => {
   if (user) {
-    store.dispatch(loginSuccess(user));
+    store.dispatch(loginSuccess(user, '/tasks/all'));
     store.dispatch(loadingData());
 
     const tasksRef = C.FIREBASE.app().database().ref(`/users/${user.uid}/tasks`);
@@ -114,7 +118,7 @@ C.FIREBASE.auth().onAuthStateChanged((user) => {
       if (!result.user) {
         store.dispatch(logout());
       } else {
-        store.dispatch(loginSuccess(result.user));
+        store.dispatch(loginSuccess(result.user, '/tasks/all'));
       }
     });
   }

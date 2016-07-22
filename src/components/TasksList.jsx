@@ -5,7 +5,33 @@ import { TaskAdder } from './TaskAdder.jsx';
 import Loading from './Loading.jsx';
 
 export default function TasksList(props) {
+  function getSelectedGroup() {
+    if (props.routeParams) {
+      if (props.routeParams.group) {
+        return props.routeParams.group;
+      }
+    }
+    return 'all';
+  }
+
   let tasks = props.tasks;
+  if (props.routeParams.query) {
+    tasks = tasks.filter(task =>
+    task.title.toUpperCase().indexOf(props.routeParams.query.toUpperCase()) !== -1);
+  }
+  if (props.route.name === 'Search') {
+    return (
+      <div style={{ marginTop: -75 }}>
+        <TasksGroup
+          tasks={tasks}
+          groupName={''}
+          availableTags={props.tags}
+          onTaskUpdate={props.updateTask}
+          onTaskRemove={props.removeTask}
+        />
+      </div>
+    );
+  }
   if (props.routeParams.tagName) {
     tasks = tasks.filter(task => {
       const tag = props.tags.filter(t => t.key === task.tagKey)[0];
@@ -34,41 +60,46 @@ export default function TasksList(props) {
 
   return props.dataLoading ? <Loading /> : (
     <div>
-      <TasksGroup
-        tasks={overdueTasks}
-        groupName={'Overdue'}
-        availableTags={props.tags}
-        onTaskUpdate={props.updateTask}
-        onTaskRemove={props.removeTask}
-      />
-      <TasksGroup
-        tasks={todayTasks}
-        groupName={'Today'}
-        availableTags={props.tags}
-        onTaskUpdate={props.updateTask}
-        onTaskRemove={props.removeTask}
-      />
-      <TasksGroup
-        tasks={tomorrowTasks}
-        groupName={'Tomorrow'}
-        availableTags={props.tags}
-        onTaskUpdate={props.updateTask}
-        onTaskRemove={props.removeTask}
-      />
-      <TasksGroup
-        tasks={nextSevenDaysTasks}
-        groupName={'In the next 7 days'}
-        availableTags={props.tags}
-        onTaskUpdate={props.updateTask}
-        onTaskRemove={props.removeTask}
-      />
-      <TasksGroup
-        tasks={laterTasks}
-        groupName={'Later'}
-        availableTags={props.tags}
-        onTaskUpdate={props.updateTask}
-        onTaskRemove={props.removeTask}
-      />
+      {getSelectedGroup() === 'overdue' || getSelectedGroup() === 'all' ?
+        <TasksGroup
+          tasks={overdueTasks}
+          groupName={'Overdue'}
+          availableTags={props.tags}
+          onTaskUpdate={props.updateTask}
+          onTaskRemove={props.removeTask}
+        /> : null}
+      {getSelectedGroup() === 'today' || getSelectedGroup() === 'all' || getSelectedGroup() === 'upcoming' ?
+        <TasksGroup
+          tasks={todayTasks}
+          groupName={'Today'}
+          availableTags={props.tags}
+          onTaskUpdate={props.updateTask}
+          onTaskRemove={props.removeTask}
+        /> : null}
+      {getSelectedGroup() === 'tomorrow' || getSelectedGroup() === 'all' || getSelectedGroup() === 'upcoming' ?
+        <TasksGroup
+          tasks={tomorrowTasks}
+          groupName={'Tomorrow'}
+          availableTags={props.tags}
+          onTaskUpdate={props.updateTask}
+          onTaskRemove={props.removeTask}
+        /> : null}
+      {getSelectedGroup() === 'next-7-days' || getSelectedGroup() === 'all' || getSelectedGroup() === 'upcoming' ?
+        <TasksGroup
+          tasks={nextSevenDaysTasks}
+          groupName={'In the next seven days'}
+          availableTags={props.tags}
+          onTaskUpdate={props.updateTask}
+          onTaskRemove={props.removeTask}
+        /> : null}
+      {getSelectedGroup() === 'later' || getSelectedGroup() === 'all' || getSelectedGroup() === 'upcoming' ?
+        <TasksGroup
+          tasks={laterTasks}
+          groupName={'Later'}
+          availableTags={props.tags}
+          onTaskUpdate={props.updateTask}
+          onTaskRemove={props.removeTask}
+        /> : null}
       <TaskAdder tasks={props.tasks} tags={props.tags} onTaskInsert={props.insertTask} />
     </div>
   );

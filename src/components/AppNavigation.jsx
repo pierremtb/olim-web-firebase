@@ -2,7 +2,7 @@ import React from 'react';
 import { AuthenticatedNavigation } from './AuthenticatedNavigation.jsx';
 
 export default function AppNavigation(props) {
-  function renderNavigation(isUser) {
+  function renderNavigation() {
     return (
       <AuthenticatedNavigation
         tags={props.tags}
@@ -14,7 +14,7 @@ export default function AppNavigation(props) {
       />
     );
   }
-  return <div> {renderNavigation(props.isUser)}</div>;
+  return <div> {renderNavigation()}</div>;
 }
 
 AppNavigation.propTypes = {

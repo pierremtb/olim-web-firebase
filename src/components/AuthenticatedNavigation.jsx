@@ -12,6 +12,7 @@ import { avatarBackgroundColor } from '../themes.js';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
+import TextField from 'material-ui/TextField';
 
 export class AuthenticatedNavigation extends React.Component {
   constructor(props) {
@@ -29,7 +30,12 @@ export class AuthenticatedNavigation extends React.Component {
     this.handleScroll = this.handleScroll.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.openTagsPage = this.openTagsPage.bind(this);
-    this.openTasksPage = this.openTasksPage.bind(this);
+    this.openOverdueTasksPage = this.openOverdueTasksPage.bind(this);
+    this.openTodayTasksPage = this.openTodayTasksPage.bind(this);
+    this.openTomorrowTasksPage = this.openTomorrowTasksPage.bind(this);
+    this.openInTheNextSevenDaysTasksPage = this.openInTheNextSevenDaysTasksPage.bind(this);
+    this.openAllUpcomingTasksPage = this.openAllUpcomingTasksPage.bind(this);
+    this.openSearchPage = this.openSearchPage.bind(this);
     this.openSettingsPage = this.openSettingsPage.bind(this);
     this.handleTagsPopoverOpen = this.handleTagsPopoverOpen.bind(this);
     this.handleTagsPopoverClose = this.handleTagsPopoverClose.bind(this);
@@ -50,6 +56,10 @@ export class AuthenticatedNavigation extends React.Component {
       return null;
     }
     return this.props.tags.filter(tag => tag.name.toLowerCase() === tagName)[0];
+  }
+
+  isSearchPage() {
+    return this.props.route.name === 'Search';
   }
 
   handleAccountMenuOpen(event) {
@@ -99,9 +109,37 @@ export class AuthenticatedNavigation extends React.Component {
     history.push('/tags');
   }
 
-  openTasksPage() {
+  openAllUpcomingTasksPage() {
     this.handleDrawerClose();
-    history.push('/tasks');
+    history.push('/tasks/upcoming');
+  }
+
+  openOverdueTasksPage() {
+    this.handleDrawerClose();
+    history.push('/tasks/overdue');
+  }
+
+  openTodayTasksPage() {
+    this.handleDrawerClose();
+    history.push('/tasks/today');
+  }
+
+  openTomorrowTasksPage() {
+    this.handleDrawerClose();
+    history.push('/tasks/tomorrow');
+  }
+
+  openInTheNextSevenDaysTasksPage() {
+    this.handleDrawerClose();
+    history.push('/tasks/next-7-days');
+  }
+
+  openSearchPage() {
+    history.push('/search');
+  }
+
+  closeSearchPage() {
+    history.push('/');
   }
 
   openSettingsPage() {
@@ -132,27 +170,37 @@ export class AuthenticatedNavigation extends React.Component {
             >
               menu
             </FontIcon>
-            <ToolbarTitle text={this.props.routes[1].name} style={{ marginLeft: 32 }} />
+            <ToolbarTitle
+              text={this.isSearchPage() ? '' : this.props.routes[1].name}
+              style={{ marginLeft: 32 }}
+            />
           </ToolbarGroup>
           <ToolbarGroup>
             {this.getCurrentTag() ?
               <div style={{ marginTop: 15 }}>
                 <Chip
-                    onRequestDelete={() => history.push('/tasks')}
+                  onRequestDelete={() => history.push('/tasks')}
                 >
                   <Avatar
-                      backgroundColor={this.getCurrentTag().color}
-                      color="white"
-                      icon={this.getCurrentTag().icon ?
-                        <FontIcon className="material-icons">{this.getCurrentTag().icon}</FontIcon>
-                        : null
-                      }
+                    backgroundColor={this.getCurrentTag().color}
+                    color="white"
+                    icon={this.getCurrentTag().icon ?
+                      <FontIcon className="material-icons">{this.getCurrentTag().icon}</FontIcon>
+                      : null
+                    }
                   >
                     {!this.getCurrentTag().icon ? this.getCurrentTag().name.charAt(0) : null}
                   </Avatar>
                   {this.getCurrentTag().name}
                 </Chip>
               </div>
+            : null}
+            {this.isSearchPage() ?
+              <TextField
+                hintText="Search..."
+                autoFocus
+                onChange={(e) => e.target && history.push(`/search/${e.target.value}`)}
+              />
             : null}
           </ToolbarGroup>
           <ToolbarGroup>
@@ -164,9 +212,21 @@ export class AuthenticatedNavigation extends React.Component {
                 filter_list
               </FontIcon>
             : null}
-            <FontIcon className="material-icons">
-              search
-            </FontIcon>
+            {this.isSearchPage() ?
+              <FontIcon
+                className="material-icons"
+                onTouchTap={this.closeSearchPage}
+              >
+                close
+              </FontIcon>
+            :
+              <FontIcon
+                className="material-icons"
+                onTouchTap={this.openSearchPage}
+              >
+                search
+              </FontIcon>
+            }
             <FontIcon
               className="material-icons"
               onTouchTap={this.handleAccountMenuOpen}
@@ -243,20 +303,45 @@ export class AuthenticatedNavigation extends React.Component {
           <Divider />
           <SubHeader>Tasks</SubHeader>
           <MenuItem
-            onTouchTap={this.openTasksPage}
-            leftIcon={<FontIcon className="material-icons">list</FontIcon>}
+            onTouchTap={this.openOverdueTasksPage}
+            leftIcon={<FontIcon className="material-icons">warning</FontIcon>}
           >
-            All
+            Overdue
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.openTodayTasksPage}
+            leftIcon={<FontIcon className="material-icons">hourglass_full</FontIcon>}
+          >
+            Today
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.openTomorrowTasksPage}
+            leftIcon={<FontIcon className="material-icons">hourglass_empty</FontIcon>}
+          >
+            Tomorrow
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.openInTheNextSevenDaysTasksPage}
+            leftIcon={<FontIcon className="material-icons">event</FontIcon>}
+          >
+            In the next seven days
+          </MenuItem>
+          <MenuItem
+            onTouchTap={this.openAllUpcomingTasksPage}
+            leftIcon={<FontIcon className="material-icons">all_inclusive</FontIcon>}
+          >
+            All upcoming
           </MenuItem>
           <Divider />
           <SubHeader>Manage</SubHeader>
           <MenuItem
-              onTouchTap={this.openTagsPage}
-              leftIcon={<FontIcon className="material-icons">label_outline</FontIcon>}
+            onTouchTap={this.openTagsPage}
+            leftIcon={<FontIcon className="material-icons">label_outline</FontIcon>}
           >
             Tags
           </MenuItem>
           <MenuItem
+            disabled
             onTouchTap={this.openSettingsPage}
             leftIcon={<FontIcon className="material-icons">settings</FontIcon>}
           >

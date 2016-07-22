@@ -22,6 +22,7 @@ export default class TagsList extends React.Component {
       tagColorValue: Colors.pink400,
       tagCommentsValue: '',
     };
+    this.getRouteName = this.getRouteName.bind(this);
     this.handleTagDialogOpen = this.handleTagDialogOpen.bind(this);
     this.handleTagDialogClose = this.handleTagDialogClose.bind(this);
     this.handleTagNameChange = this.handleTagNameChange.bind(this);
@@ -30,6 +31,15 @@ export default class TagsList extends React.Component {
     this.handleTagCommentsChange = this.handleTagCommentsChange.bind(this);
     this.insertNewTag = this.insertNewTag.bind(this);
     this.updateCurrentTag = this.updateCurrentTag.bind(this);
+  }
+
+  getRouteName() {
+    if (this.props.route) {
+      if (this.props.route.name) {
+        return this.props.route.name;
+      }
+    }
+    return '';
   }
 
   insertNewTag() {
@@ -89,12 +99,19 @@ export default class TagsList extends React.Component {
   }
 
   render() {
+    let tags = this.props.tags;
+    if (this.props.routeParams) {
+      if (this.props.routeParams.query) {
+        tags = tags.filter(tag =>
+          tag.name.toUpperCase().indexOf(this.props.routeParams.query.toUpperCase()) !== -1);
+      }
+    }
     return (
       <div>
-        {this.props.tags.length > 0 ?
+        {tags.length > 0 ?
           <Paper>
             <List>
-              {this.props.tags.map(tag =>
+              {tags.map(tag =>
                 <Tag
                   name={tag.name}
                   comments={tag.comments}
@@ -125,7 +142,12 @@ export default class TagsList extends React.Component {
         }
         <FloatingActionButton
           secondary
-          style={{ position: 'fixed', right: 20, bottom: 20 }}
+          style={{
+            position: 'fixed',
+            right: 20,
+            bottom: 20,
+            display: this.getRouteName() === 'Search' ? 'none' : 'block',
+          }}
           iconStyle={{ color: Colors.lightBlack }}
           onTouchTap={this.handleTagDialogOpen}
         >
@@ -228,6 +250,9 @@ export default class TagsList extends React.Component {
 TagsList.propTypes = {
   tasks: React.PropTypes.array,
   tags: React.PropTypes.array,
+  route: React.PropTypes.object,
+  routes: React.PropTypes.array,
+  routeParams: React.PropTypes.object,
   insertTag: React.PropTypes.func,
   updateTag: React.PropTypes.func,
   removeTag: React.PropTypes.func,
