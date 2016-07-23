@@ -1,8 +1,6 @@
 import C from '../constants';
 
-const initialState = {
-  unitSystem: C.METRIC
-};
+const initialState = {};
 
 let settingsReducer = (currentState = initialState, action) => {
   switch (action.type) {
@@ -12,14 +10,12 @@ let settingsReducer = (currentState = initialState, action) => {
         [action.setting]: action.value
       };
       break;
-
     case C.FETCHED_SETTINGS:
       return {
         ...currentState,
         ...action.settings
       };
       break;
-
     default:
       return currentState;
       break;

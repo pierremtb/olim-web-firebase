@@ -100,7 +100,11 @@ export default function TasksList(props) {
           onTaskUpdate={props.updateTask}
           onTaskRemove={props.removeTask}
         /> : null}
-      <TaskAdder tasks={props.tasks} tags={props.tags} onTaskInsert={props.insertTask} />
+      <TaskAdder
+        tasks={props.tasks}
+        tags={props.tags}
+        onTaskInsert={props.insertTask}
+      />
     </div>
   );
 }

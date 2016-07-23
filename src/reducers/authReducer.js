@@ -1,5 +1,4 @@
 import C from '../constants';
-import history from '../history';
 
 const initialState = {
   authProvider: null,

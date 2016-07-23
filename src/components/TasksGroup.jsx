@@ -12,7 +12,6 @@ import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import { secondaryTextStyle } from '../themes.js';
 import moment from 'moment';
-// import { markTaskAsDone, updateTask } from '../../api/tasks/methods';
 import { setTime, setDay } from '../utils.js';
 
 export class TasksGroup extends React.Component {

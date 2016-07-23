@@ -5,7 +5,6 @@ import Avatar from 'material-ui/Avatar';
 import FontIcon from 'material-ui/FontIcon';
 import { grey600, white } from 'material-ui/styles/colors';
 import { avatarBackgroundColor } from '../themes.js';
-// import { removeTag } from '../../api/tags/methods';
 
 export class Tag extends React.Component {
   constructor(props) {

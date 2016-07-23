@@ -1,7 +1,7 @@
 import React from 'react';
 import TagsList from '../containers/TagsListContainer.js';
 
-export function PageTags(props) {
+export function PageTags() {
   return (
     <div className="container">
       <br />

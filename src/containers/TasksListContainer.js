@@ -15,7 +15,7 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps() {
   return {
     insertTask: (task) => {
       const uid = C.FIREBASE.auth().currentUser.uid;

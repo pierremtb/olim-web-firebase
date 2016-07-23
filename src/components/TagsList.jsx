@@ -9,7 +9,6 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import RegexTextField from './RegexTextField.jsx';
 import * as Colors from 'material-ui/styles/colors';
-// import { insertTag, updateTag, removeTag } from '../../api/tags/methods';
 
 export default class TagsList extends React.Component {
   constructor(props) {

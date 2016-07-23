@@ -1,17 +1,11 @@
 import { connect } from 'react-redux';
-import AppNavigation from '../components/AppNavigation.jsx';
+import NavigationDrawer from '../components/NavigationDrawer.jsx';
 import C from '../constants';
 import { logout } from '../actions';
 
 function mapStateToProps(state) {
-  const unitSystem = state.settings.unitSystem;
   return {
-    tasks: state.tasks,
-    tags: state.tags,
     userName: state.auth.userName,
-    unitSystem,
-    tempUnit: unitSystem === C.IMPERIAL ? '°F' : '°C',
-    weightUnit: unitSystem === C.IMPERIAL ? 'lbs' : 'kg',
   };
 }
 
@@ -23,13 +17,13 @@ function mapDispatchToProps(dispatch) {
         dispatch(logout());
         location.reload();
       });
-    }
+    },
   };
 }
 
-const AppNavigationContainer = connect(
+const NavigationDrawerContainer = connect(
     mapStateToProps,
     mapDispatchToProps
-)(AppNavigation);
+)(NavigationDrawer);
 
-export default AppNavigationContainer;
+export default NavigationDrawerContainer;

@@ -4,12 +4,12 @@ import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 import SubHeader from 'material-ui/Subheader';
 import IconButton from 'material-ui/IconButton';
-// import { insertTask } from '../../api/tasks/methods';
 import { Task } from './Task.jsx';
 import Divider from 'material-ui/Divider';
 import { secondaryTextStyle, accentColor, disabledColor } from '../themes.js';
 import { Matcher, setDay, setTime } from '../utils.js';
 
+// TODO: fix TaskAdder Tag GUI
 export class TaskAdder extends React.Component {
   constructor(props) {
     super(props);
@@ -98,10 +98,9 @@ export class TaskAdder extends React.Component {
     this.setState(newState);
   }
 
-
   render() {
     return (
-      <div className="task-adder">
+      <div className="task-adder" style={{ marginLeft: 140 }} >
         <Paper zDepth={4} style={{ padding: 5 }}>
           {this.state.titleValue !== '' ?
             <div>
