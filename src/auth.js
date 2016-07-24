@@ -1,9 +1,8 @@
-import { browserHistory } from 'react-router';
 import C from './constants';
 import firebase from 'firebase';
 
 const auth = {
-  login: (provider) => {
+  login(provider) {
     let authProvider = null;
 
     switch (provider) {
@@ -27,7 +26,7 @@ const auth = {
 
   isLoggedIn: () => C.FIREBASE.auth().currentUser,
 
-  checkAuth: (nextState, replace) => {
+  checkAuth(nextState, replace) {
     if (!C.FIREBASE.auth().currentUser) {
       replace({
         pathname: '/action/login',
@@ -37,18 +36,18 @@ const auth = {
   },
 
   authUiConfig: {
-    signInSuccessUrl: "/",
+    signInSuccessUrl: '/',
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
     ],
-    tosUrl: "tos-url-goes-here",
-    siteName: "Olim",
+    tosUrl: 'tos-url-goes-here',
+    siteName: 'Olim',
     callbacks: {
-      signInSuccess: function (currentUser, credential, redirectUrl) {
-        return false; // Do not redirect automatically
-      }
-    }
+      signInSuccess(currentUser, credential, redirectUrl) {
+        return false;
+      },
+    },
   },
 };
 

@@ -16,7 +16,7 @@ import { setDay, setTime } from '../utils.js';
 import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog';
 import TimePickerDialog from 'material-ui/TimePicker/TimePickerDialog';
 
-export class Task extends React.Component {
+export default class Task extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,64 +80,18 @@ export class Task extends React.Component {
   }
 
   setTag(tag) {
-    const task = {};
-    Object.assign(task, this.props);
-    task.tag = tag;
-    this.props.onTaskUpdate(task);
-  }
-
-  setNewReminder(time) {
-    const { taskId } = this.props;
-    let reminder = {};
-    if (time) {
-      const newTime = moment(time);
-      reminder = { time: newTime.hours() * 60 + newTime.minutes() };
+    const { taskKey, onTagChange, onTaskUpdate } = this.props;
+    if (taskKey) {
+      const task = {};
+      Object.assign(task, this.props);
+      task.tag = tag;
+      onTaskUpdate(task);
     } else {
-      reminder = null;
-    }
-    if (taskId) {
-      updateTask.call(
-        { _id: taskId, update: { reminder } },
-        (err) => {
-          if (err) {
-            console.log(err);
-          }
-        }
-      );
-    } else {
-      this.props.onReminderChange(reminder);
+      onTagChange(tag);
     }
   }
 
-  markTaskDone() {
-    const task = {};
-    Object.assign(task, this.props);
-    task.done = true;
-    this.props.onTaskUpdate(task);
-  }
-
-  markTaskNotDone() {
-    const task = {};
-    Object.assign(task, this.props);
-    task.done = false;
-    this.props.onTaskUpdate(task);
-  }
-
-  deleteTask() {
-    this.props.onTaskRemove(this.props.taskKey);
-  }
-
-  handleTagsPopoverOpen(event) {
-    event.preventDefault();
-    this.setState({
-      tagsPopoverOpened: true,
-      tagsPopoverAnchor: event.currentTarget,
-    });
-  }
-
-  handleTagsPopoverClose() {
-    this.setState({ tagsPopoverOpened: false });
-  }
+  setNewReminder() {}
 
   getTagBackgroundColor() {
     if (this.props.done) {
@@ -182,6 +136,38 @@ export class Task extends React.Component {
       }
     }
     return null;
+  }
+
+  handleTagsPopoverOpen(event) {
+    event.preventDefault();
+    this.setState({
+      tagsPopoverOpened: true,
+      tagsPopoverAnchor: event.currentTarget,
+    });
+  }
+
+  handleTagsPopoverClose() {
+    this.setState({ tagsPopoverOpened: false });
+  }
+
+  markTaskDone() {
+    const task = {};
+    Object.assign(task, this.props);
+    task.done = true;
+    this.props.onTaskUpdate(task);
+  }
+
+  markTaskNotDone() {
+    const task = {};
+    Object.assign(task, this.props);
+    task.done = false;
+    this.props.onTaskUpdate(task);
+  }
+
+  deleteTask() {
+    const task = {};
+    Object.assign(task, this.props);
+    this.props.onTaskRemove(task);
   }
 
   render() {
@@ -518,6 +504,7 @@ Task.propTypes = {
   availableTags: React.PropTypes.array,
   onReminderChange: React.PropTypes.func,
   onTagChange: React.PropTypes.func,
+  onTaskInsert: React.PropTypes.func,
   onTaskUpdate: React.PropTypes.func,
   onTaskRemove: React.PropTypes.func,
 };

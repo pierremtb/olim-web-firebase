@@ -16,10 +16,9 @@ export const primaryColor = blueGrey800;
 export const primaryDarkColor = blueGrey900;
 export const disabledColor = fade(black, 0.38);
 export const avatarBackgroundColor = emphasize(white, 0.26);
-export const chipBackgroundColor = emphasize(white, 0.12);
-export const chipDeleteIconColor = fade(darkBlack, 0.26);
-export const chipTextColor = fade(darkBlack, 0.87);
-export const chipBoxShadow = `0 1px 6px ${fade(fullBlack, 0.12)}, 0 1px 4px ${fade(fullBlack, 0.12)}`;
+export const primaryTextColor = fade(darkBlack, 0.87);
+export const secondaryTextColor = fade(darkBlack, 0.54);
+export const hintTextColor = fade(darkBlack, 0.38);
 
 export const globalTheme = getMuiTheme({
   palette: {

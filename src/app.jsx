@@ -4,13 +4,13 @@ import { Router, Route, IndexRoute } from 'react-router';
 import auth from './auth';
 import history from './history';
 import AppLayout from './containers/AppLayoutContainer';
-import { PublicLayout } from './components/PublicLayout.jsx';
-import { PageTasks } from './components/PageTasks.jsx';
-import { PageTags } from './components/PageTags.jsx';
-import { PageSearch } from './components/PageSearch.jsx';
-import { PageSettings } from './components/PageSettings.jsx';
-import { PageLogin } from './components/PageLogin.jsx';
-import { NotFound } from './components/PageNotFound.jsx';
+import PublicLayout from './components/PublicLayout.jsx';
+import PageTasks from './components/PageTasks.jsx';
+import PageTags from './components/PageTags.jsx';
+import PageSearch from './components/PageSearch.jsx';
+import PageSettings from './components/PageSettings.jsx';
+import PageLogin from './components/PageLogin.jsx';
+import NotFound from './components/PageNotFound.jsx';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { globalTheme } from './themes.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -21,11 +21,8 @@ import { createStore, applyMiddleware } from 'redux';
 import C from './constants';
 import rootReducer from './reducers/index';
 import {
-  checkRoastInProgress,
-  fetchedRoasts,
   fetchedTasks,
   fetchedTags,
-  fetchedSettings,
   listeningToAuth,
   loadedData,
   loadingData,
@@ -33,9 +30,8 @@ import {
   logout,
 } from './actions';
 
-require('./scss/application.scss');
 require('./scss/grid.scss');
-require('./scss/new.scss');
+require('./scss/application.scss');
 
 injectTapEventPlugin();
 
@@ -43,28 +39,12 @@ const store = applyMiddleware(thunkMiddleware)(createStore)(rootReducer, {},
   window.devToolsExtension && window.devToolsExtension()
 );
 
-// Analytics
 ReactGA.initialize(C.GOOGLE_ANALYTICS_CODE);
-
-const logPageView = () => {
-  if (window.location.hostname !== 'localhost') {
-    ReactGA.pageview(window.location.hash);
-  }
-};
-
-const redirectIfUser = (nextState, replace) => {
-  if (false) {
-    replace({
-      pathname: '/',
-      state: { nextPathname: nextState.location.pathname },
-    });
-  }
-};
 
 const routes = (
   <Router history={history}>
     <Route path="/action" component={PublicLayout}>
-      <Route path="login" component={PageLogin} onEnter={redirectIfUser} />
+      <Route path="login" component={PageLogin} />
     </Route>
 
     <Route path="/" component={AppLayout}>
@@ -92,10 +72,9 @@ render(
 
 store.dispatch(listeningToAuth());
 
-// Start listening to firebase auth changes.
 C.FIREBASE.auth().onAuthStateChanged((user) => {
   if (user) {
-    store.dispatch(loginSuccess(user, '/tasks/all'));
+    store.dispatch(loginSuccess(user));
     store.dispatch(loadingData());
 
     const tasksRef = C.FIREBASE.app().database().ref(`/users/${user.uid}/tasks`);
@@ -118,11 +97,10 @@ C.FIREBASE.auth().onAuthStateChanged((user) => {
       if (!result.user) {
         store.dispatch(logout());
       } else {
-        store.dispatch(loginSuccess(result.user, '/tasks/all'));
+        store.dispatch(loginSuccess(result.user));
       }
     });
   }
-
 }, err => {
   console.log(err);
 });

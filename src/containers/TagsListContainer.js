@@ -15,19 +15,19 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps() {
   return {
-    insertTag: tag => {
+    insertTag(tag) {
       const uid = C.FIREBASE.auth().currentUser.uid;
       const tagRef = C.FIREBASE.app().database().ref(`users/${uid}/tags`);
       tagRef.push().set(tag);
     },
-    updateTag: tag => {
+    updateTag(tag) {
       const uid = C.FIREBASE.auth().currentUser.uid;
       const tagRef = C.FIREBASE.app().database().ref(`users/${uid}/tags/${tag.key}`);
       tagRef.set((tag));
     },
-    removeTag: key => {
+    removeTag(tag) {
       const uid = C.FIREBASE.auth().currentUser.uid;
-      const tagRef = C.FIREBASE.app().database().ref(`users/${uid}/tags/${key}`);
+      const tagRef = C.FIREBASE.app().database().ref(`users/${uid}/tags/${tag.key}`);
       tagRef.remove();
     },
   };

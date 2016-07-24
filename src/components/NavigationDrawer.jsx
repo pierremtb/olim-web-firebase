@@ -7,6 +7,8 @@ import Drawer from 'material-ui/Drawer';
 import Avatar from 'material-ui/Avatar';
 import history from '../history';
 import SelectableList from './SelectableList.jsx';
+import { primaryColor } from '../themes';
+import { white } from 'material-ui/styles/colors';
 
 export default class NavigationDrawer extends React.Component {
   constructor(props) {
@@ -90,12 +92,25 @@ export default class NavigationDrawer extends React.Component {
       >
         <ListItem
           disabled
-          leftAvatar={<Avatar src={user.photoURL} />}
-          primaryText={user.userName}
+          leftAvatar={
+            user.photoURL ?
+              <Avatar src={user.photoURL} />
+            :
+              <Avatar
+                icon={<FontIcon className="material-icons">person</FontIcon>}
+                backgroundColor={primaryColor}
+                color={white}
+              />
+          }
+          primaryText={user.userName || 'Olim'}
           secondaryText={user.email}
           rightIcon={
             docked ?
-              <FontIcon className="material-icons" onTouchTap={undockDrawer}>
+              <FontIcon
+                className="material-icons"
+                onTouchTap={undockDrawer}
+                style={{ cursor: 'pointer' }}
+              >
                 keyboard_arrow_left
               </FontIcon>
             : null
@@ -147,7 +162,6 @@ export default class NavigationDrawer extends React.Component {
             onTouchTap={this.openSettingsPage}
             leftIcon={<FontIcon className="material-icons">settings</FontIcon>}
             primaryText="Settings"
-            disabled
           />
           <ListItem
             value={'logout'}

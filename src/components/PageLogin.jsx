@@ -13,14 +13,15 @@ import {
 } from '../themes.js';
 import { blueGrey800, cyan500 } from 'material-ui/styles/colors';
 
-export function PageLogin(props) {
+export default function PageLogin(props) {
   const FirebaseAuthUi = new firebaseui.auth.AuthUI(C.FIREBASE.auth());
-  FirebaseAuthUi.start("#firebaseui-auth-container", auth.authUiConfig);
+  FirebaseAuthUi.start('#firebaseui-auth-container', auth.authUiConfig);
 
   return (
     <div className="center-align login-container" style={{ marginTop: 100 }}>
       <h1
         style={{
+          textAlign: 'center',
           color: cyan500,
           letterSpacing: 10,
           textTransform: 'uppercase',

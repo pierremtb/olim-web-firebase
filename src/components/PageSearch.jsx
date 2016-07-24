@@ -3,7 +3,7 @@ import TasksList from '../containers/TasksListContainer.js';
 import TagsList from '../containers/TagsListContainer.js';
 import SubHeader from 'material-ui/Subheader';
 
-export function PageSearch(props) {
+export default function PageSearch(props) {
   return (
     <div className="container">
       <br />

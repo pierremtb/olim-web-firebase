@@ -1,7 +1,7 @@
 import React from 'react';
 import TasksList from '../containers/TasksListContainer.js';
 
-export function PageTasks(props) {
+export default function PageTasks(props) {
   return (
     <div className="container">
       <TasksList

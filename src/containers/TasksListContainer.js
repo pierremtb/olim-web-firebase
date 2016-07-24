@@ -14,19 +14,19 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps() {
   return {
-    insertTask: (task) => {
+    insertTask(task) {
       const uid = C.FIREBASE.auth().currentUser.uid;
       const taskRef = C.FIREBASE.app().database().ref(`users/${uid}/tasks`);
       taskRef.push().set(getTaskMap(task));
     },
-    updateTask: (task) => {
+    updateTask(task) {
       const uid = C.FIREBASE.auth().currentUser.uid;
       const taskRef = C.FIREBASE.app().database().ref(`users/${uid}/tasks/${task.taskKey}`);
       taskRef.set(getTaskMap(task));
     },
-    removeTask: (key) => {
+    removeTask(task) {
       const uid = C.FIREBASE.auth().currentUser.uid;
-      const taskRef = C.FIREBASE.app().database().ref(`users/${uid}/tasks/${key}`);
+      const taskRef = C.FIREBASE.app().database().ref(`users/${uid}/tasks/${task.taskKey}`);
       taskRef.remove();
     },
   };

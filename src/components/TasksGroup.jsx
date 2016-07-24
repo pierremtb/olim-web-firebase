@@ -7,14 +7,15 @@ import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog';
 import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/MenuItem';
 import SubHeader from 'material-ui/Subheader';
-import { Task } from './Task.jsx';
+import Task from './Task.jsx';
+import EmptyMessage from './EmptyMessage.jsx';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import { secondaryTextStyle } from '../themes.js';
 import moment from 'moment';
 import { setTime, setDay } from '../utils.js';
 
-export class TasksGroup extends React.Component {
+export default class TasksGroup extends React.Component {
   constructor(props) {
     super(props);
     this.markAllAsDone = this.markAllAsDone.bind(this);
@@ -44,20 +45,25 @@ export class TasksGroup extends React.Component {
     });
   }
 
-  setTag(_id, tag) {
-    updateTask.call({ _id, update: { tag } });
-  }
-
   render() {
-    if (this.props.tasks.length === 0 || !this.props.tasks) {
-      return <div></div>;
+    const { tasks, noEmptyMessage, groupName, availableTags,
+      onTaskInsert, onTaskUpdate, onTaskRemove } = this.props;
+    if ((tasks.length === 0 || !tasks) && !noEmptyMessage) {
+      return (
+        <EmptyMessage
+          iconName="weekend"
+          message="Nothing to do"
+        />
+      );
+    } else if ((tasks.length === 0 || !tasks) && noEmptyMessage) {
+      return null;
     }
 
     return (
       <div style={{ paddingTop: 20 }}>
         <Toolbar style={{ background: 'transparent' }}>
           <ToolbarGroup firstChild>
-            <SubHeader>{this.props.groupName}</SubHeader>
+            <SubHeader>{groupName}</SubHeader>
           </ToolbarGroup>
           <ToolbarGroup lastChild>
             <IconMenu
@@ -107,18 +113,18 @@ export class TasksGroup extends React.Component {
         </Toolbar>
         <Paper>
           <List>
-            {this.props.tasks.map(task =>
+            {tasks.map(task =>
               <Task
                 title={task.title}
                 dueDate={new Date(task.dueDate)}
-                tag={this.props.availableTags.filter(tag => tag.key === task.tagKey)[0]}
-                onTagChange={tagId => this.setTag(task._id, tagId)}
-                availableTags={this.props.availableTags}
+                tag={availableTags.filter(tag => tag.key === task.tagKey)[0]}
+                availableTags={availableTags}
                 done={task.done}
                 taskKey={task.key}
                 reminder={task.reminder}
-                onTaskUpdate={this.props.onTaskUpdate}
-                onTaskRemove={this.props.onTaskRemove}
+                onTaskInsert={onTaskInsert}
+                onTaskUpdate={onTaskUpdate}
+                onTaskRemove={onTaskRemove}
               />
             )}
           </List>
@@ -149,6 +155,8 @@ TasksGroup.propTypes = {
   tasks: React.PropTypes.array,
   groupName: React.PropTypes.string,
   availableTags: React.PropTypes.array,
+  onTaskInsert: React.PropTypes.func,
   onTaskUpdate: React.PropTypes.func,
   onTaskRemove: React.PropTypes.func,
+  noEmptyMessage: React.PropTypes.bool,
 };

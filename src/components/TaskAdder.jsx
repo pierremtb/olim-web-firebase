@@ -4,13 +4,12 @@ import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 import SubHeader from 'material-ui/Subheader';
 import IconButton from 'material-ui/IconButton';
-import { Task } from './Task.jsx';
+import Task from './Task.jsx';
 import Divider from 'material-ui/Divider';
 import { secondaryTextStyle, accentColor, disabledColor } from '../themes.js';
 import { Matcher, setDay, setTime } from '../utils.js';
 
-// TODO: fix TaskAdder Tag GUI
-export class TaskAdder extends React.Component {
+export default class TaskAdder extends React.Component {
   constructor(props) {
     super(props);
 
@@ -65,9 +64,7 @@ export class TaskAdder extends React.Component {
     Matcher.modules.en_GB.map(module => {
       const matches = text.match(module.regex);
       if (matches) {
-        console.log(matches);
         const result = module.getResult(matches);
-        console.log(result);
         if (result) {
           switch (module.type) {
             case 'time':
@@ -79,7 +76,6 @@ export class TaskAdder extends React.Component {
             case 'tag':
               tag = this.props.tags.filter(t => t.name.toUpperCase() === result.toUpperCase())[0];
               if (tag) {
-                console.log(tag);
                 tagValue = tag.key;
               }
               break;
@@ -129,7 +125,7 @@ export class TaskAdder extends React.Component {
                 disabled={false}
                 availableTags={this.props.tags}
                 tag={this.props.tags.filter(tag => tag.key === this.state.tagValue)[0]}
-                onTagChange={tagId => this.setState({ tagValue: tagId })}
+                onTagChange={tag => this.setState({ tagValue: tag.key })}
                 onDateChange={dueDate => this.setState({ dueDateValue: dueDate })}
                 onReminderChange={reminder => this.setState({ reminderValue: reminder })}
                 editing
@@ -167,6 +163,6 @@ export class TaskAdder extends React.Component {
 TaskAdder.propTypes = {
   tasks: React.PropTypes.array,
   tags: React.PropTypes.array,
-  onTaskInsert: React.PropTypes.func,
   drawerDocked: React.PropTypes.bool,
+  onTaskInsert: React.PropTypes.func,
 };

@@ -6,17 +6,18 @@ import FontIcon from 'material-ui/FontIcon';
 import { grey600, white } from 'material-ui/styles/colors';
 import { avatarBackgroundColor } from '../themes.js';
 
-export class Tag extends React.Component {
+export default class Tag extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       hovered: false,
     };
-    this.deleteTag = this.deleteTag.bind(this);
+    this.removeTag = this.removeTag.bind(this);
   }
 
-  deleteTag() {
-    this.props.onDeleteClick(this.props.tagKey);
+  removeTag() {
+    const { name, icon, color, comments, tagKey } = this.props;
+    this.props.onDeleteClick({ name, icon, color, comments, key: tagKey });
   }
 
   render() {
@@ -49,7 +50,7 @@ export class Tag extends React.Component {
             iconClassName="material-icons"
             tooltip="Delete"
             iconStyle={{ color: grey600 }}
-            onTouchTap={this.deleteTag}
+            onTouchTap={this.removeTag}
             style={{
               position: 'absolute',
               right: 0,

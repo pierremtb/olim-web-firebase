@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function PageSettings() {
+export default function PageSettings() {
   return (
     <div className="container">
       <br />

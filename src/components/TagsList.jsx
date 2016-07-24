@@ -2,13 +2,20 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import List from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
-import { Tag } from './Tag.jsx';
+import IconButton from 'material-ui/IconButton';
+import Tag from './Tag.jsx';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import EmptyMessage from './EmptyMessage.jsx';
+import SubHeader from 'material-ui/Subheader';
 import Dialog from 'material-ui/Dialog';
 import RegexTextField from './RegexTextField.jsx';
+import C from '../constants';
 import * as Colors from 'material-ui/styles/colors';
+import Snackbar from 'material-ui/Snackbar';
+
 
 export default class TagsList extends React.Component {
   constructor(props) {
@@ -20,6 +27,11 @@ export default class TagsList extends React.Component {
       tagIconValue: 'label_outline',
       tagColorValue: Colors.pink400,
       tagCommentsValue: '',
+      snackMessage: '',
+      snackOpened: false,
+      deletedTag: null,
+      tagIconDialogOpened: false,
+      tagColorDialogOpened: false,
     };
     this.getRouteName = this.getRouteName.bind(this);
     this.handleTagDialogOpen = this.handleTagDialogOpen.bind(this);
@@ -30,6 +42,14 @@ export default class TagsList extends React.Component {
     this.handleTagCommentsChange = this.handleTagCommentsChange.bind(this);
     this.insertNewTag = this.insertNewTag.bind(this);
     this.updateCurrentTag = this.updateCurrentTag.bind(this);
+    this.handleSnackUndo = this.handleSnackUndo.bind(this);
+    this.openSnack = this.openSnack.bind(this);
+    this.closeSnack = this.closeSnack.bind(this);
+    this.removeTagUndoable = this.removeTagUndoable.bind(this);
+    this.handleTagIconDialogOpen = this.handleTagIconDialogOpen.bind(this);
+    this.handleTagIconDialogClose = this.handleTagIconDialogClose.bind(this);
+    this.handleTagColorDialogOpen = this.handleTagColorDialogOpen.bind(this);
+    this.handleTagColorDialogClose = this.handleTagColorDialogClose.bind(this);
   }
 
   getRouteName() {
@@ -42,6 +62,24 @@ export default class TagsList extends React.Component {
   }
 
   insertNewTag() {
+    const { tagNameValue, tagIconValue, tagColorValue, tagCommentsValue } = this.state;
+    if (tagNameValue === '') {
+      alert('A name is needed');
+      return;
+    }
+    if (tagColorValue === '') {
+      alert('A color is needed');
+      return;
+    }
+    if (tagIconValue === '') {
+      alert('An icon is needed');
+      return;
+    }
+    if (tagCommentsValue === '') {
+      alert('A description is needed');
+      return;
+    }
+
     const tag = {
       name: this.state.tagNameValue,
       icon: this.state.tagIconValue,
@@ -64,6 +102,31 @@ export default class TagsList extends React.Component {
     this.handleTagDialogClose();
   }
 
+  removeTagUndoable(tag) {
+    this.props.removeTag(tag);
+    this.openSnack(tag);
+  }
+
+  handleSnackUndo() {
+    if (this.state.deletedTag) {
+      this.props.insertTag(this.state.deletedTag);
+      this.setState({ deletedTag: null });
+      this.closeSnack();
+    }
+  }
+
+  openSnack(tag) {
+    this.setState({
+      snackOpened: true,
+      snackMessage: `Tag '#${tag.name}' has been removed.`,
+      deletedTag: tag,
+    });
+  }
+
+  closeSnack() {
+    this.setState({ snackOpened: false });
+  }
+
   handleTagDialogOpen() {
     this.setState({ tagDialogOpened: true });
   }
@@ -79,18 +142,34 @@ export default class TagsList extends React.Component {
     });
   }
 
+  handleTagIconDialogOpen() {
+    this.setState({ tagIconDialogOpened: true });
+  }
+
+  handleTagIconDialogClose() {
+    this.setState({ tagIconDialogOpened: false });
+  }
+
+  handleTagColorDialogOpen() {
+    this.setState({ tagColorDialogOpened: true });
+  }
+
+  handleTagColorDialogClose() {
+    this.setState({ tagColorDialogOpened: false });
+  }
+
   handleTagNameChange(event) {
     this.setState({ tagNameValue: event.target.value });
   }
 
-  handleTagIconChange(event) {
-    this.setState({ tagIconValue: event.target.value.replace(/ /g, '_') });
+  handleTagIconChange(icon) {
+    this.setState({ tagIconValue: icon });
+    this.handleTagIconDialogClose();
   }
 
-  handleTagColorChange(event) {
-    const text = event.target.value;
-    const color = Colors[text] ? Colors[text] : text;
+  handleTagColorChange(color) {
     this.setState({ tagColorValue: color });
+    this.handleTagColorDialogClose();
   }
 
   handleTagCommentsChange(event) {
@@ -117,7 +196,7 @@ export default class TagsList extends React.Component {
                   icon={tag.icon ? tag.icon : null}
                   color={tag.color ? tag.color : null}
                   tagKey={tag.key}
-                  onDeleteClick={this.props.removeTag}
+                  onDeleteClick={this.removeTagUndoable}
                   onEditClick={() => {
                     this.setState({
                       tagDialogOpened: true,
@@ -133,11 +212,10 @@ export default class TagsList extends React.Component {
             </List>
           </Paper>
           :
-          <p style={{ textAlign: 'center' }}>
-            <FontIcon className="material-icons">add</FontIcon>
-            <br />
-            <span>No tag added yet!</span>
-          </p>
+          <EmptyMessage
+            iconName="label_outline"
+            message="No tags, add one!"
+          />
         }
         <FloatingActionButton
           secondary
@@ -153,7 +231,6 @@ export default class TagsList extends React.Component {
           <FontIcon className="material-icons">add</FontIcon>
         </FloatingActionButton>
         <Dialog
-          title="Add a tag"
           actions={[
             <FlatButton
               label="Cancel"
@@ -175,11 +252,18 @@ export default class TagsList extends React.Component {
           modal
           open={this.state.tagDialogOpened}
         >
-          <span style={{ display: 'inline-block', fontSize: 20, marginRight: 18 }}>
+          <span style={{ display: 'inline-block', fontSize: 35, marginRight: 5 }}>
             #
           </span>
           <div style={{ display: 'inline-block' }}>
             <RegexTextField
+              fullWidth
+              style={{
+                fontSize: 35,
+                height: '4rem',
+                fontWeight: '300',
+                paddingBottom: '-10px',
+              }}
               hintText="Name of the new tag"
               errorRegex="2-20 caractères. Letters, numbers, _ and -"
               errorUnavailable="This Tag already exists"
@@ -190,57 +274,109 @@ export default class TagsList extends React.Component {
             />
           </div>
           <br />
-          <FontIcon
-            className="material-icons"
-            style={{ display: 'inline-block', marginLeft: -3, fontSize: 20, marginRight: 13 }}
-          >
-            {this.state.tagIconValue}
-          </FontIcon>
-          <div style={{ display: 'inline-block' }}>
-            <RegexTextField
-              hintText="Google's MD icon name"
-              errorRegex="Unconform name"
-              errorUnavailable="This Tag already exists"
-              regex={/^[a-zA-Z_ -]{3,30}$/}
-              unavailableValues={[]}
-              value={this.state.tagIconValue}
-              onChange={this.handleTagIconChange}
-            />
-          </div>
-          <br />
-          <div
-            style={{
-              display: 'inline-block',
-              marginLeft: 0,
-              width: 15,
-              height: 15,
-              borderRadius: '50%',
-              marginRight: 18,
-              background: this.state.tagColorValue,
-            }}
-          ></div>
-          <div style={{ display: 'inline-block' }}>
-            <TextField
-              hintText="Color (orange or orange500 or #545454 or rgb(1,2,3))"
-              value={this.state.tagColorValue}
-              onChange={this.handleTagColorChange}
-            />
-          </div>
-          <br />
-          <FontIcon
-            className="material-icons"
-            style={{ display: 'inline-block', marginLeft: -3, fontSize: 20, marginRight: 13 }}
-          >
-            comment
-          </FontIcon>
-          <div style={{ display: 'inline-block' }}>
+          <div style={{ display: 'inline-block', marginBottom: 30 }}>
             <TextField
               hintText="Comments"
               value={this.state.tagCommentsValue}
               onChange={this.handleTagCommentsChange}
             />
           </div>
+          <SubHeader>Icon</SubHeader>
+          <div style={{ display: 'inline-block' }}>
+            <FontIcon
+              className="material-icons"
+              style={{ verticalAlign: 'middle', fontSize: 35, marginRight: 13 }}
+            >
+              {this.state.tagIconValue}
+            </FontIcon>
+            <RaisedButton
+              label="Choose an icon..."
+              onTouchTap={this.handleTagIconDialogOpen}
+              style={{ verticalAlign: 'middle' }}
+            />
+            <Dialog
+              title="Choose an icon"
+              modal={false}
+              open={this.state.tagIconDialogOpened}
+              onRequestClose={this.handleTagIconDialogClose}
+              autoScrollBodyContent
+            >
+              <div className="row">
+                {C.MdIcons.map(icon => (
+                  <IconButton
+                    iconClassName="material-icons"
+                    style={{
+                      padding: 10,
+                      cursor: 'pointer',
+                    }}
+                    onTouchTap={() => this.handleTagIconChange(icon)}
+                  >
+                    {icon}
+                  </IconButton>
+                ))}
+              </div>
+            </Dialog>
+          </div>
+          <SubHeader>Color</SubHeader>
+          <div style={{ display: 'inline-block' }}>
+            <div
+              style={{
+                background: this.state.tagColorValue,
+                verticalAlign: 'middle',
+                width: 28,
+                height: 28,
+                marginLeft: 3,
+                marginRight: 17,
+                borderRadius: '50%',
+              }}
+            ></div>
+            <RaisedButton
+              label="Choose a color..."
+              onTouchTap={this.handleTagColorDialogOpen}
+              style={{ verticalAlign: 'middle' }}
+            />
+            <Dialog
+              title="Choose a color"
+              modal={false}
+              open={this.state.tagColorDialogOpened}
+              onRequestClose={this.handleTagColorDialogClose}
+              autoScrollBodyContent
+            >
+              <div className="row">
+                {C.MdColors.map(color => (
+                  <div className="col s1">
+                    <div
+                      style={{
+                        background: color,
+                        width: 40,
+                        height: 40,
+                        margin: 10,
+                        borderRadius: '50%',
+                      }}
+                      onClick={() => this.handleTagColorChange(color)}
+                    ></div>
+                  </div>
+                ))}
+              </div>
+            </Dialog>
+          </div>
         </Dialog>
+        <Snackbar
+          open={this.state.snackOpened}
+          message={this.state.snackMessage}
+          action="undo"
+          autoHideDuration={4000}
+          onActionTouchTap={this.handleSnackUndo}
+          onRequestClose={this.closeSnack}
+          style={{
+            top: 0,
+            marginLeft: 280,
+            bottom: 'auto',
+            transform: this.state.snackOpened ?
+                'translate3d(0, 0, 0)' :
+                'translate3d(0, -50px, 0)',
+          }}
+          />
       </div>
     );
   }
