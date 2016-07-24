@@ -100,7 +100,10 @@ export class TaskAdder extends React.Component {
 
   render() {
     return (
-      <div className="task-adder" style={{ marginLeft: 140 }} >
+      <div
+        className="task-adder"
+        style={{ marginLeft: this.props.drawerDocked ? 140 : 0 }}
+      >
         <Paper zDepth={4} style={{ padding: 5 }}>
           {this.state.titleValue !== '' ?
             <div>
@@ -165,4 +168,5 @@ TaskAdder.propTypes = {
   tasks: React.PropTypes.array,
   tags: React.PropTypes.array,
   onTaskInsert: React.PropTypes.func,
+  drawerDocked: React.PropTypes.bool,
 };

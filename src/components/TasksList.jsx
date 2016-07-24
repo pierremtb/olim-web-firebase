@@ -104,6 +104,7 @@ export default function TasksList(props) {
         tasks={props.tasks}
         tags={props.tags}
         onTaskInsert={props.insertTask}
+        drawerDocked={props.drawerDocked}
       />
     </div>
   );
@@ -119,4 +120,5 @@ TasksList.propTypes = {
   updateTask: React.PropTypes.func,
   removeTask: React.PropTypes.func,
   dataLoading: React.PropTypes.bool,
+  drawerDocked: React.PropTypes.bool,
 };

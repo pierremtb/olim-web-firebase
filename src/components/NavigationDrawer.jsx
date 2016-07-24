@@ -4,10 +4,10 @@ import FontIcon from 'material-ui/FontIcon';
 import SubHeader from 'material-ui/Subheader';
 import { ListItem } from 'material-ui/List';
 import Drawer from 'material-ui/Drawer';
+import Avatar from 'material-ui/Avatar';
 import history from '../history';
 import SelectableList from './SelectableList.jsx';
 
-// TODO: hide if small window
 export default class NavigationDrawer extends React.Component {
   constructor(props) {
     super(props);
@@ -31,8 +31,8 @@ export default class NavigationDrawer extends React.Component {
   }
 
   handleDrawerClose() {
-    if (false) {
-      this.setState({ drawerOpened: false });
+    if (!this.props.docked) {
+      this.props.closeDrawer();
     }
   }
 
@@ -76,26 +76,31 @@ export default class NavigationDrawer extends React.Component {
   }
 
   render() {
+    const { user, docked, opened, undockDrawer } = this.props;
     return (
       <Drawer
-        docked
+        docked={docked}
         width={280}
-        open={this.state.drawerOpened}
+        zDepth={docked ? 0 : 2}
+        open={opened}
         onRequestChange={this.handleDrawerClose}
+        containerStyle={{
+          borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+        }}
       >
-        <div
-          style={{
-            fontSize: 40,
-            fontWeight: 300,
-            paddingTop: 20,
-            paddingBottom: 20,
-            marginLeft: 16,
-          }}
-        >
-          <span>
-            Olim
-          </span>
-        </div>
+        <ListItem
+          disabled
+          leftAvatar={<Avatar src={user.photoURL} />}
+          primaryText={user.userName}
+          secondaryText={user.email}
+          rightIcon={
+            docked ?
+              <FontIcon className="material-icons" onTouchTap={undockDrawer}>
+                keyboard_arrow_left
+              </FontIcon>
+            : null
+          }
+        />
         <Divider />
         <SelectableList>
           <SubHeader>Tasks</SubHeader>
@@ -158,5 +163,9 @@ export default class NavigationDrawer extends React.Component {
 
 NavigationDrawer.propTypes = {
   logout: React.PropTypes.func,
-  userName: React.PropTypes.string,
+  user: React.PropTypes.object,
+  docked: React.PropTypes.bool,
+  opened: React.PropTypes.bool,
+  closeDrawer: React.PropTypes.func,
+  undockDrawer: React.PropTypes.func,
 };

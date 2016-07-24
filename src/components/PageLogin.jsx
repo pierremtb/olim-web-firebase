@@ -19,13 +19,14 @@ export function PageLogin(props) {
 
   return (
     <div className="center-align login-container" style={{ marginTop: 100 }}>
-      <h1 style={{
-        color: cyan500,
-        letterSpacing: 10,
-        textTransform: 'uppercase',
-        marginRight: -10,
-        fontWeight: 100,
-        fontSize: 40,
+      <h1
+        style={{
+          color: cyan500,
+          letterSpacing: 10,
+          textTransform: 'uppercase',
+          marginRight: -10,
+          fontWeight: 100,
+          fontSize: 40,
         }}
       >
         olim

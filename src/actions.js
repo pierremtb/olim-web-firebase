@@ -1,40 +1,43 @@
 import C from './constants';
 import history from './history';
 
-// Auth actions.
-export const listeningToAuth = () => {
+/**
+ * Auth functions
+ */
+
+export function listeningToAuth() {
   return {
     type: C.LISTENING_TO_AUTH,
   };
-};
+}
 
-export const loginRequest = (method = 'google', nextPath = '/') => {
+export function loginRequest(method = 'google', nextPath = '/') {
   return {
     type: C.LOGIN_REQUEST,
     method,
     nextPath,
   };
-};
+}
 
-export const loginSuccess = (user, nextPath = '/') => {
+export function loginSuccess(user, nextPath = '/') {
   history.push(nextPath);
   return {
     type: C.LOGIN_SUCCESS,
     user,
     nextPath,
   };
-};
+}
 
-export const logout = (nextPath = '/') => {
+export function logout(nextPath = '/') {
   history.push(nextPath);
   history.reload();
   return {
     type: C.LOGOUT,
     nextPath,
   };
-};
+}
 
-export const startListeningToAuth = () => {
+export function startListeningToAuth() {
   return function (dispatch) {
     dispatch(listeningToAuth());
     // Start listening to firebase auth changes.
@@ -47,10 +50,13 @@ export const startListeningToAuth = () => {
       }
     });
   };
-};
+}
 
-// Tasks actions.
-export const startListeningToTasks = () => {
+/**
+ * Tasks
+ */
+
+export function startListeningToTasks() {
   if (C.FIREBASE.auth().currentUser) {
     const uid = C.FIREBASE.auth().currentUser.uid;
     return (dispatch, getState) => {
@@ -65,7 +71,7 @@ export const startListeningToTasks = () => {
   return (dispatch, getState) => {
     dispatch(logout());
   };
-};
+}
 
 export function fetchedTags(snapshot) {
   const tags = [];
@@ -96,20 +102,47 @@ export function fetchedTasks(snapshot) {
   };
 }
 
-// Data loading.
+/**
+ * Data loading
+ */
+
 export function loadingData(){
-  return {
-    type: C.LOADING_DATA
-  };
+  return { type: C.LOADING_DATA };
 }
 
 export function loadedData(){
-  return {
-    type: C.LOADED_DATA
-  };
+  return { type: C.LOADED_DATA };
 }
 
-// Settings.
+// Drawer position.
+export function wantDrawerDocked(){
+  return { type: C.DOCK_DRAWER };
+}
+
+export function wantDrawerUndocked() {
+  return { type: C.UNDOCK_DRAWER };
+}
+
+export function shouldDrawerBeDocked(){
+  return { type: C.SHOULD_DOCK_DRAWER };
+}
+
+export function shouldDrawerBeUndocked() {
+  return { type: C.SHOULD_UNDOCK_DRAWER };
+}
+
+export function openDrawer() {
+  return { type: C.OPEN_DRAWER };
+}
+
+export function closeDrawer() {
+  return { type: C.CLOSE_DRAWER };
+}
+
+/**
+ * Settings
+ */
+
 export function updateSetting(setting, value) {
   return {
     type: C.UPDATE_SETTING,

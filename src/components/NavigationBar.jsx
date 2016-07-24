@@ -12,6 +12,7 @@ import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import TextField from 'material-ui/TextField';
 
+// TODO: fix small animation problem of toolbar actions
 export default class NavigationBar extends React.Component {
   constructor(props) {
     super(props);
@@ -21,6 +22,7 @@ export default class NavigationBar extends React.Component {
       currentPageTitle: 'Tags',
     };
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleDrawer = this.handleDrawer.bind(this);
     this.handleTagsPopoverOpen = this.handleTagsPopoverOpen.bind(this);
     this.handleTagsPopoverClose = this.handleTagsPopoverClose.bind(this);
     this.getCurrentTag = this.getCurrentTag.bind(this);
@@ -66,6 +68,20 @@ export default class NavigationBar extends React.Component {
     this.setState({ tagsPopoverOpened: false });
   }
 
+  handleDrawer() {
+    const { shouldBeDocked, wantItDocked, opened } = this.props.drawer;
+    const { undockDrawer, dockDrawer, openDrawer, closeDrawer } = this.props;
+    if (shouldBeDocked && wantItDocked) {
+      undockDrawer();
+    } else if (shouldBeDocked && !wantItDocked) {
+      dockDrawer();
+    } else if (opened) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
+  }
+
   handleScroll(event) {
     this.setState({
       scrollTop: event.srcElement.body.scrollTop,
@@ -73,6 +89,8 @@ export default class NavigationBar extends React.Component {
   }
 
   render() {
+    const { shouldBeDocked, wantItDocked } = this.props.drawer;
+    const docked = shouldBeDocked && wantItDocked;
     return (
       <div>
         <Toolbar
@@ -80,8 +98,8 @@ export default class NavigationBar extends React.Component {
             background: '#00BCD4',
             position: 'fixed',
             width: '100%',
-            paddingRight: 280 + 24,
-            transition: 'box-shadow 400ms',
+            paddingRight: docked ? 280 + 24 : 24,
+            transition: 'box-shadow 400ms, padding-right 0ms',
             top: 0,
             zIndex: 99,
             boxShadow: this.state.scrollTop > 0 ?
@@ -91,8 +109,11 @@ export default class NavigationBar extends React.Component {
         >
           <ToolbarGroup firstChild>
             <FontIcon
+              style={{
+                display: docked ? 'none' : 'block',
+              }}
               className="material-icons"
-              onTouchTap={this.handleDrawerOpen}
+              onTouchTap={this.handleDrawer}
             >
               menu
             </FontIcon>
@@ -195,5 +216,10 @@ NavigationBar.propTypes = {
   route: React.PropTypes.object,
   routes: React.PropTypes.object,
   routeParams: React.PropTypes.object,
+  drawer: React.PropTypes.object,
   userName: React.PropTypes.string,
+  dockDrawer: React.PropTypes.func,
+  undockDrawer: React.PropTypes.func,
+  openDrawer: React.PropTypes.func,
+  closeDrawer: React.PropTypes.func,
 };

@@ -4,14 +4,11 @@ import C from '../constants';
 import { getTaskMap } from '../utils';
 
 function mapStateToProps(state) {
-  const unitSystem = state.settings.unitSystem;
   return {
     tasks: state.tasks,
     tags: state.tags,
     dataLoading: state.dataLoading,
-    unitSystem,
-    tempUnit: unitSystem === C.IMPERIAL ? '°F' : '°C',
-    weightUnit: unitSystem === C.IMPERIAL ? 'lbs' : 'kg',
+    drawerDocked: state.drawer.shouldBeDocked && state.drawer.wantItDocked,
   };
 }
 

@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Router, Route, IndexRoute } from 'react-router';
 import auth from './auth';
 import history from './history';
-import { AppLayout } from './components/AppLayout.jsx';
+import AppLayout from './containers/AppLayoutContainer';
 import { PublicLayout } from './components/PublicLayout.jsx';
 import { PageTasks } from './components/PageTasks.jsx';
 import { PageTags } from './components/PageTags.jsx';

@@ -4,7 +4,11 @@ import TasksList from '../containers/TasksListContainer.js';
 export function PageTasks(props) {
   return (
     <div className="container">
-      <TasksList route={props.route} routes={props.routes} routeParams={props.routeParams} />
+      <TasksList
+        route={props.route}
+        routes={props.routes}
+        routeParams={props.routeParams}
+      />
       <br />
       <br />
       <br />

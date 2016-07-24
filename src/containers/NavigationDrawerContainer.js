@@ -1,22 +1,31 @@
 import { connect } from 'react-redux';
 import NavigationDrawer from '../components/NavigationDrawer.jsx';
 import C from '../constants';
-import { logout } from '../actions';
+import { logout, closeDrawer, wantDrawerUndocked } from '../actions';
 
 function mapStateToProps(state) {
   return {
-    userName: state.auth.userName,
+    user: state.auth,
+    docked: state.drawer.wantItDocked && state.drawer.shouldBeDocked,
+    opened: state.drawer.opened,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    logout: e => {
+    logout(e) {
       e.preventDefault();
       C.FIREBASE.auth().signOut().then(() => {
         dispatch(logout());
         location.reload();
       });
+    },
+    undockDrawer() {
+      dispatch(wantDrawerUndocked());
+      dispatch(closeDrawer());
+    },
+    closeDrawer() {
+      dispatch(closeDrawer());
     },
   };
 }
