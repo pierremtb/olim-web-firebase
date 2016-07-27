@@ -22,7 +22,6 @@ export function loginSuccess(user, nextPath = '/tasks/today') {
 
 export function logout(nextPath = '/') {
   history.push(nextPath);
-  history.reload();
   return {
     type: C.LOGOUT,
     nextPath,

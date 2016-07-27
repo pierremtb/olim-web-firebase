@@ -98,7 +98,7 @@ export default class NavigationBar extends React.Component {
             background: '#00BCD4',
             position: 'fixed',
             width: '100%',
-            paddingRight: docked ? 280 + 24 : 24,
+            paddingRight: docked ? 280 + 32 : 32,
             transition: 'box-shadow 400ms, padding-right 0ms',
             top: 0,
             zIndex: 99,

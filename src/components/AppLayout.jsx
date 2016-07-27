@@ -3,11 +3,12 @@ import NavigationBar from '../containers/NavigationBarContainer.js';
 import { cyan500 } from 'material-ui/styles/colors';
 import NavigationDrawer from '../containers/NavigationDrawerContainer';
 import transitions from 'material-ui/styles/transitions';
-import { WindowResizeListener } from 'react-window-resize-listener'
+import { WindowResizeListener } from 'react-window-resize-listener';
 
 export default function AppLayout(props) {
   document.body.style.backgroundColor = cyan500;
-
+  const pathname = props.location.pathname;
+  console.log(props);
   return (
     <div>
       <NavigationDrawer />
@@ -28,7 +29,6 @@ export default function AppLayout(props) {
       </div>
       <WindowResizeListener
         onResize={windowSize => {
-        console.log(windowSize);
           if (windowSize.windowWidth > 1000) {
             props.shouldDockDrawer();
           } else {
@@ -41,6 +41,8 @@ export default function AppLayout(props) {
 }
 
 AppLayout.propTypes = {
+  route: React.PropTypes.object,
+  location: React.PropTypes.object,
   children: React.PropTypes.element,
   onLogout: React.PropTypes.func,
   docked: React.PropTypes.bool,

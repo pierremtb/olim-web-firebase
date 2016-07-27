@@ -15,6 +15,7 @@ import RegexTextField from './RegexTextField.jsx';
 import C from '../constants';
 import * as Colors from 'material-ui/styles/colors';
 import Snackbar from 'material-ui/Snackbar';
+import { primaryTextColor } from '../themes';
 
 
 export default class TagsList extends React.Component {
@@ -239,6 +240,7 @@ export default class TagsList extends React.Component {
             />,
             <FlatButton
               label="Save"
+              labelStyle={{ color: primaryTextColor }}
               primary
               onTouchTap={() => {
                 if (!this.state.currentKey) {
@@ -274,15 +276,16 @@ export default class TagsList extends React.Component {
             />
           </div>
           <br />
-          <div style={{ display: 'inline-block', marginBottom: 30 }}>
-            <TextField
-              hintText="Comments"
-              value={this.state.tagCommentsValue}
-              onChange={this.handleTagCommentsChange}
-            />
-          </div>
-          <SubHeader>Icon</SubHeader>
-          <div style={{ display: 'inline-block' }}>
+          <SubHeader style={{ paddingLeft: 0 }}>Description</SubHeader>
+          <TextField
+            fullWidth
+            hintText="Targets the tasks I love to do..."
+            value={this.state.tagCommentsValue}
+            onChange={this.handleTagCommentsChange}
+            style={{ marginTop: -20 }}
+          />
+          <SubHeader style={{ paddingLeft: 0 }}>Icon</SubHeader>
+          <div style={{ display: 'inline-block', marginBottom: 10 }}>
             <FontIcon
               className="material-icons"
               style={{ verticalAlign: 'middle', fontSize: 35, marginRight: 13 }}
@@ -317,7 +320,7 @@ export default class TagsList extends React.Component {
               </div>
             </Dialog>
           </div>
-          <SubHeader>Color</SubHeader>
+          <SubHeader style={{ paddingLeft: 0 }}>Color</SubHeader>
           <div style={{ display: 'inline-block' }}>
             <div
               style={{
@@ -328,6 +331,7 @@ export default class TagsList extends React.Component {
                 marginLeft: 3,
                 marginRight: 17,
                 borderRadius: '50%',
+                display: 'inline-block',
               }}
             ></div>
             <RaisedButton
@@ -376,7 +380,7 @@ export default class TagsList extends React.Component {
                 'translate3d(0, 0, 0)' :
                 'translate3d(0, -50px, 0)',
           }}
-          />
+        />
       </div>
     );
   }

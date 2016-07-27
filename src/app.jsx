@@ -74,6 +74,7 @@ store.dispatch(listeningToAuth());
 
 C.FIREBASE.auth().onAuthStateChanged((user) => {
   if (user) {
+    console.log(user);
     store.dispatch(loginSuccess(user));
     store.dispatch(loadingData());
 
