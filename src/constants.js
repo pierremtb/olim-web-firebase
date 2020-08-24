@@ -1,12 +1,15 @@
 import firebase from 'firebase';
+import firebaseui from 'firebaseui';
 
 const firebaseConf = {
-  apiKey: 'AIzaSyAAHj50vK1Ro1Cy0LsE0O5alo3AXaJ0jtU',
-  authDomain: 'olim-1342.firebaseapp.com',
-  databaseURL: 'https://olim-1342.firebaseio.com',
-  storageBucket: 'olim-1342.appspot.com',
+  apiKey: 'AIzaSyDZCAgKnZLcWbFyfoKF1GiCCdYXjwBgOsY',
+  authDomain: 'olim-e9377.firebaseapp.com',
+  databaseURL: 'https://olim-e9377.firebaseio.com',
+  storageBucket: 'olim-e9377.appspot.com',
 };
 firebase.initializeApp(firebaseConf);
+
+// var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 const C = {
   // Auth actions.
